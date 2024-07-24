@@ -9,7 +9,6 @@ const productSchema = new mongoose.Schema({
 	videoUrl: { type: String },
 	createdAt: { type: Date, default: Date.now },
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-	type: { type: String, required: true },
 	category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 });
 

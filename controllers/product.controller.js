@@ -3,7 +3,7 @@ import Product from '../models/product.model.js';
 
 export const createProduct = async (req, res) => {
 	try {
-		const { title, description, price, discountPrice, type, category } = req.body;
+		const { title, description, price, discountPrice, category } = req.body;
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -17,7 +17,6 @@ export const createProduct = async (req, res) => {
 			discountPrice,
 			imageUrls,
 			videoUrl,
-			type,
 			category,
 		});
 
@@ -109,7 +108,7 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { title, description, price, discountPrice, type, category } = req.body;
+		const { title, description, price, discountPrice, category } = req.body;
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -127,7 +126,6 @@ export const updateProduct = async (req, res) => {
 			description,
 			price,
 			discountPrice,
-			type,
 			category,
 		};
 		if (imageUrls.length > 0) {
