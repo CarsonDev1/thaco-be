@@ -3,7 +3,7 @@ import Product from '../models/product.model.js';
 
 export const createProduct = async (req, res) => {
 	try {
-		const { title, description, price, discountPrice, type } = req.body;
+		const { title, description, price, discountPrice, type, category } = req.body;
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -18,6 +18,7 @@ export const createProduct = async (req, res) => {
 			imageUrls,
 			videoUrl,
 			type,
+			category,
 		});
 
 		await newProduct.save();
@@ -26,6 +27,7 @@ export const createProduct = async (req, res) => {
 		res.status(400).json({ error: error.message });
 	}
 };
+
 const uploadFileToFirebase = (file) => {
 	return new Promise((resolve, reject) => {
 		const blob = bucket.file(file.originalname);
@@ -55,7 +57,7 @@ const uploadFileToFirebase = (file) => {
 
 export const getProducts = async (req, res) => {
 	try {
-		const products = await Product.find().populate('comments');
+		const products = await Product.find().populate('comments').populate('category');
 		res.status(200).json(products);
 	} catch (error) {
 		res.status(400).json({ error: error.message });
@@ -64,7 +66,7 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
 	try {
-		const product = await Product.findById(req.params.id).populate('comments');
+		const product = await Product.findById(req.params.id).populate('comments').populate('category');
 		if (!product) return res.status(404).json({ error: 'Product not found' });
 		res.status(200).json(product);
 	} catch (error) {
@@ -107,7 +109,7 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { title, description, price, discountPrice, type } = req.body;
+		const { title, description, price, discountPrice, type, category } = req.body;
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -126,6 +128,7 @@ export const updateProduct = async (req, res) => {
 			price,
 			discountPrice,
 			type,
+			category,
 		};
 		if (imageUrls.length > 0) {
 			updatedProductData.imageUrls = imageUrls;

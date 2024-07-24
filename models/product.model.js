@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema({
 	createdAt: { type: Date, default: Date.now },
 	comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
 	type: { type: String, required: true },
+	category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 });
 
 const Product = mongoose.model('Product', productSchema);
