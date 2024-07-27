@@ -109,6 +109,7 @@ export const updateProduct = async (req, res) => {
 	try {
 		const { id } = req.params;
 		const { title, description, price, discountPrice, category } = req.body;
+
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -126,7 +127,7 @@ export const updateProduct = async (req, res) => {
 			description,
 			price,
 			discountPrice,
-			category,
+			category: category.map((cat) => mongoose.Types.ObjectId(cat)),
 		};
 		if (imageUrls.length > 0) {
 			updatedProductData.imageUrls = imageUrls;
