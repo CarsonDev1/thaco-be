@@ -122,13 +122,21 @@ export const updateProduct = async (req, res) => {
 			videoUrl = await uploadFileToFirebase(video);
 		}
 
+		// Ensure category is an array of valid ObjectId strings
+		const formattedCategory = Array.isArray(category)
+			? category
+					.filter((id) => mongoose.Types.ObjectId.isValid(id)) // Validate ObjectId strings
+					.map((id) => mongoose.Types.ObjectId(id))
+			: [];
+
 		const updatedProductData = {
 			title,
 			description,
 			price,
 			discountPrice,
-			category: category.map((cat) => mongoose.Types.ObjectId(cat)),
+			category: formattedCategory.length > 0 ? formattedCategory : undefined, // Do not include if empty
 		};
+
 		if (imageUrls.length > 0) {
 			updatedProductData.imageUrls = imageUrls;
 		}
