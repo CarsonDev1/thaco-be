@@ -3,6 +3,11 @@ import Category from '../models/category.model.js';
 export const createCategory = async (req, res) => {
 	try {
 		const { name, description } = req.body;
+
+		if (!name) {
+			return res.status(400).json({ error: 'Name is required' });
+		}
+
 		const newCategory = new Category({ name, description });
 		await newCategory.save();
 		res.status(201).json(newCategory);

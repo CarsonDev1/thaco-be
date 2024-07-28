@@ -3,7 +3,7 @@ import Product from '../models/product.model.js';
 
 export const createProduct = async (req, res) => {
 	try {
-		const { title, description, price, discountPrice, category } = req.body;
+		const { title, description, price, discountPrice, category, size, loadCapacity, engine } = req.body;
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
 
@@ -18,6 +18,9 @@ export const createProduct = async (req, res) => {
 			imageUrls,
 			videoUrl,
 			category,
+			size,
+			loadCapacity,
+			engine,
 		});
 
 		await newProduct.save();
@@ -75,13 +78,16 @@ export const getProductById = async (req, res) => {
 
 export const searchProducts = async (req, res) => {
 	try {
-		const { title, content, createdAt, discountPrice } = req.body;
+		const { title, content, createdAt, discountPrice, size, loadCapacity, engine } = req.body;
 
 		const searchCriteria = {};
 		if (title) searchCriteria.title = { $regex: title, $options: 'i' };
 		if (content) searchCriteria.content = { $regex: content, $options: 'i' };
 		if (createdAt) searchCriteria.createdAt = { $gte: new Date(createdAt) };
 		if (discountPrice) searchCriteria.discountPrice = discountPrice;
+		if (size) searchCriteria.size = { $regex: size, $options: 'i' };
+		if (loadCapacity) searchCriteria.loadCapacity = loadCapacity;
+		if (engine) searchCriteria.engine = { $regex: engine, $options: 'i' };
 
 		const products = await Product.find(searchCriteria).populate('comments');
 		res.status(200).json(products);
@@ -108,7 +114,7 @@ export const deleteProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
 	try {
 		const { id } = req.params;
-		const { title, description, price, discountPrice, category } = req.body;
+		const { title, description, price, discountPrice, category, size, loadCapacity, engine } = req.body;
 
 		const images = req.files.image;
 		const video = req.files.video ? req.files.video[0] : null;
@@ -135,6 +141,9 @@ export const updateProduct = async (req, res) => {
 			price,
 			discountPrice,
 			category: formattedCategory.length > 0 ? formattedCategory : undefined, // Do not include if empty
+			size,
+			loadCapacity,
+			engine,
 		};
 
 		if (imageUrls.length > 0) {
