@@ -128,7 +128,6 @@ export const updateProduct = async (req, res) => {
 			videoUrl = await uploadFileToFirebase(video);
 		}
 
-		// Ensure category is an array of valid ObjectId strings
 		const formattedCategory = Array.isArray(category)
 			? category
 					.filter((id) => mongoose.Types.ObjectId.isValid(id)) // Validate ObjectId strings
